@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Move — MoveEase</title>
+  <link rel="icon" type="image/icon" href="./box-seam.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    body { background-color: #f8f9fa; }
+
+    .booking-hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: white;
+      padding: 48px 0 36px;
+    }
+
+    .booking-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 36px;
+      margin-top: -30px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 36px;
+    }
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid #dee2e6;
+      background: white;
+      color: #6c757d;
+      transition: all 0.3s;
+      z-index: 1;
+    }
+    .step-dot.active {
+      background: #0d6efd;
+      border-color: #0d6efd;
+      color: white;
+    }
+    .step-dot.done {
+      background: #198754;
+      border-color: #198754;
+      color: white;
+    }
+    .step-line {
+      height: 2px;
+      width: 80px;
+      background: #dee2e6;
+      transition: background 0.3s;
+    }
+    .step-line.done { background: #198754; }
+    .step-label {
+      font-size: 11px;
+      color: #6c757d;
+      text-align: center;
+      margin-top: 6px;
+    }
+    .step-label.active { color: #0d6efd; font-weight: 600; }
+    .step-label.done { color: #198754; }
+
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .service-card {
+      border: 2px solid #dee2e6;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      height: 100%;
+    }
+    .service-card:hover { border-color: #0d6efd; background: #f0f4ff; }
+    .service-card.selected { border-color: #0d6efd; background: #e8f0fe; }
+    .service-card .icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .service-card h6 { font-weight: 600; margin-bottom: 4px; }
+    .service-card p { font-size: 12px; color: #6c757d; margin: 0; }
+
+    .branch-btn {
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      padding: 10px 18px;
+      cursor: pointer;
+      background: white;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .branch-btn:hover { border-color: #0d6efd; color: #0d6efd; }
+    .branch-btn.selected { border-color: #0d6efd; background: #0d6efd; color: white; }
+
+    .success-icon {
+      width: 80px; height: 80px;
+      background: #d1e7dd;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 20px;
+    }
+
+    #toast-container {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 9999;
+    }
+
+    .required-star { color: #dc3545; }
+  </style>
+</head>
+
+<body>
+
+<!-- Toast -->
+<div id="toast-container"></div>
+
+<!-- Hero -->
+<div class="booking-hero">
+  <div class="container text-center">
+    <a href="./index.html" class="text-white text-decoration-none d-inline-flex align-items-center gap-2 mb-3">
+      <img src="./box-seam.svg" alt="logo" width="28" style="filter:brightness(0) invert(1)"> MoveEase
+    </a>
+    <h1 class="fw-bold mb-2" style="font-size:2rem;">Book Your Move</h1>
+    <p class="mb-0 opacity-75">Fast, easy, reliable — fill in the details below</p>
+  </div>
+</div>
+
+<!-- Main Card -->
+<div class="container" style="max-width: 780px;">
+  <div class="booking-card">
+
+    <!-- Step Indicator -->
+    <div>
+      <div class="step-indicator">
+        <div style="text-align:center">
+          <div class="step-dot active" id="dot1">1</div>
+          <div class="step-label active" id="lbl1">Service</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div style="text-align:center">
+          <div class="step-dot" id="dot2">2</div>
+          <div class="step-label" id="lbl2">Details</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div style="text-align:center">
+          <div class="step-dot" id="dot3">3</div>
+          <div class="step-label" id="lbl3">Contact</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+        <div style="text-align:center">
+          <div class="step-dot" id="dot4">4</div>
+          <div class="step-label" id="lbl4">Confirm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 1: Service Type ══ -->
+    <div class="form-section active" id="step1">
+      <h5 class="fw-bold mb-1">What service do you need?</h5>
+      <p class="text-muted mb-4" style="font-size:14px;">Select the type of move</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="service-card" onclick="selectService('COURIER', this)">
+            <div class="icon">📦</div>
+            <h6>Courier Service</h6>
+            <p>Send packages and parcels across the city or country</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card" onclick="selectService('HOUSE_SHIFTING', this)">
+            <div class="icon">🏠</div>
+            <h6>House Shifting</h6>
+            <p>Complete home relocation with packing and unpacking</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card" onclick="selectService('RENTAL_TRANSPORT', this)">
+            <div class="icon">🚚</div>
+            <h6>Rental Transport</h6>
+            <p>Hire a vehicle for your own move at your own pace</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4" id="branchSection">
+        <label class="form-label fw-semibold">Select Branch <span class="required-star">*</span></label>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="branch-btn" onclick="selectBranch('Chennai', this)">Chennai</button>
+          <button class="branch-btn" onclick="selectBranch('Coimbatore', this)">Coimbatore</button>
+          <button class="branch-btn" onclick="selectBranch('Salem', this)">Salem</button>
+          <button class="branch-btn" onclick="selectBranch('Trichy', this)">Trichy</button>
+          <button class="branch-btn" onclick="selectBranch('Bangalore', this)">Bangalore</button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <a href="./index.html" class="btn btn-outline-secondary">← Back to Home</a>
+        <button class="btn btn-primary px-4" onclick="goToStep(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 2: Move Details ══ -->
+    <div class="form-section" id="step2">
+      <h5 class="fw-bold mb-1">Move details</h5>
+      <p class="text-muted mb-4" style="font-size:14px;">Tell us where and when</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Pickup Address <span class="required-star">*</span></label>
+          <textarea class="form-control" id="pickupAddress" rows="3"
+            placeholder="Full pickup address, landmark, city..."></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Delivery Address <span class="required-star">*</span></label>
+          <textarea class="form-control" id="deliveryAddress" rows="3"
+            placeholder="Full delivery address, landmark, city..."></textarea>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Moving Date <span class="required-star">*</span></label>
+          <input type="date" class="form-control" id="movingDate" min="">
+        </div>
+        <div class="col-md-6" id="propertySizeSection">
+          <label class="form-label fw-semibold">Property Size</label>
+          <select class="form-select" id="propertySize">
+            <option value="">Select size (optional)</option>
+            <option value="1BHK">1 BHK</option>
+            <option value="2BHK">2 BHK</option>
+            <option value="3BHK">3 BHK</option>
+            <option value="VILLA">Villa / Independent House</option>
+            <option value="OFFICE">Office / Commercial</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Additional Notes</label>
+        <textarea class="form-control" id="additionalNotes" rows="3"
+          placeholder="Fragile items, special instructions, floor number, lift availability..."></textarea>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-secondary" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary px-4" onclick="goToStep(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 3: Contact Info ══ -->
+    <div class="form-section" id="step3">
+      <h5 class="fw-bold mb-1">Your contact details</h5>
+      <p class="text-muted mb-4" style="font-size:14px;">We'll use this to confirm your booking</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Full Name <span class="required-star">*</span></label>
+          <input type="text" class="form-control" id="fullName" placeholder="e.g. Saba Ahmed">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Email Address <span class="required-star">*</span></label>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Phone Number <span class="required-star">*</span></label>
+          <input type="tel" class="form-control" id="phone" placeholder="+91 98765 43210">
+        </div>
+      </div>
+
+      <!-- Summary box -->
+      <div class="bg-light rounded-3 p-3 mb-4" id="summaryBox">
+        <h6 class="fw-semibold mb-2">Booking Summary</h6>
+        <div class="row g-1" style="font-size:13px;">
+          <div class="col-5 text-muted">Service:</div>
+          <div class="col-7 fw-semibold" id="sum_service">—</div>
+          <div class="col-5 text-muted">Branch:</div>
+          <div class="col-7" id="sum_branch">—</div>
+          <div class="col-5 text-muted">Moving date:</div>
+          <div class="col-7" id="sum_date">—</div>
+          <div class="col-5 text-muted">Pickup:</div>
+          <div class="col-7" id="sum_pickup">—</div>
+          <div class="col-5 text-muted">Delivery:</div>
+          <div class="col-7" id="sum_delivery">—</div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-secondary" onclick="goToStep(2)">← Back</button>
+        <button class="btn btn-success px-4" id="submitBtn" onclick="submitBooking()">
+          Confirm Booking
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 4: Success ══ -->
+    <div class="form-section" id="step4">
+      <div class="text-center py-4">
+        <div class="success-icon">✅</div>
+        <h4 class="fw-bold mb-2">Booking Confirmed!</h4>
+        <p class="text-muted mb-1">Your booking ID is:</p>
+        <h2 class="fw-bold text-primary mb-3" id="bookingId">#----</h2>
+        <p class="text-muted mb-4">
+          We've received your request. Our team from the <strong id="confirmedBranch"></strong> branch
+          will contact you at <strong id="confirmedEmail"></strong> shortly to confirm the details.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <button class="btn btn-outline-primary" onclick="trackThisBooking()">
+            Track This Booking
+          </button>
+          <a href="./index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Track Booking card (appears after success) -->
+  <div class="booking-card mt-4 d-none" id="trackCard">
+    <h6 class="fw-bold mb-3">Booking Status</h6>
+    <div id="trackResults"></div>
+  </div>
+
+  <p class="text-center text-muted mt-4 mb-5" style="font-size:12px;">
+    All Rights Reserved © 2026 — MoveEase
+  </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<script>
+  // ── API base (same server since files are in static/) ──
+  const API_BASE = '/api';
+
+  // ── State ──
+  let selectedService = '';
+  let selectedBranch  = '';
+  let savedBookingId  = null;
+  let savedEmail      = '';
+
+  // ── Set min date to tomorrow ──
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('movingDate').min = tomorrow.toISOString().split('T')[0];
+
+  // ── Toast ──
+  function showToast(msg, type = 'success') {
+    const c = document.getElementById('toast-container');
+    const id = 'toast-' + Date.now();
+    const bg = type === 'success' ? 'bg-success' : type === 'danger' ? 'bg-danger' : 'bg-warning text-dark';
+    c.insertAdjacentHTML('beforeend', `
+      <div id="${id}" class="toast align-items-center text-white ${bg} border-0 show mb-2" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">${msg}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            onclick="document.getElementById('${id}').remove()"></button>
+        </div>
+      </div>`);
+    setTimeout(() => { const el = document.getElementById(id); if (el) el.remove(); }, 4500);
+  }
+
+  // ── Service selection ──
+  function selectService(type, el) {
+    selectedService = type;
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── Branch selection ──
+  function selectBranch(name, el) {
+    selectedBranch = name;
+    document.querySelectorAll('.branch-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── Step navigation ──
+  function goToStep(n) {
+    // Validate before moving forward
+    if (n === 2) {
+      if (!selectedService) { showToast('⚠️ Please select a service type.', 'warning'); return; }
+      if (!selectedBranch)  { showToast('⚠️ Please select a branch.', 'warning'); return; }
+    }
+    if (n === 3) {
+      const p = document.getElementById('pickupAddress').value.trim();
+      const d = document.getElementById('deliveryAddress').value.trim();
+      const dt = document.getElementById('movingDate').value;
+      if (!p)  { showToast('⚠️ Please enter the pickup address.', 'warning'); return; }
+      if (!d)  { showToast('⚠️ Please enter the delivery address.', 'warning'); return; }
+      if (!dt) { showToast('⚠️ Please select a moving date.', 'warning'); return; }
+      // Fill summary
+      const labels = { COURIER: 'Courier Service', HOUSE_SHIFTING: 'House Shifting', RENTAL_TRANSPORT: 'Rental Transport' };
+      document.getElementById('sum_service').textContent  = labels[selectedService] || selectedService;
+      document.getElementById('sum_branch').textContent   = selectedBranch;
+      document.getElementById('sum_date').textContent     = dt;
+      document.getElementById('sum_pickup').textContent   = p.length > 40 ? p.slice(0, 40) + '...' : p;
+      document.getElementById('sum_delivery').textContent = d.length > 40 ? d.slice(0, 40) + '...' : d;
+    }
+
+    // Update UI
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById('step' + i).classList.toggle('active', i === n);
+      const dot = document.getElementById('dot' + i);
+      const lbl = document.getElementById('lbl' + i);
+      dot.classList.remove('active', 'done');
+      lbl.classList.remove('active', 'done');
+      if (i < n)       { dot.classList.add('done'); dot.textContent = '✓'; lbl.classList.add('done'); }
+      else if (i === n){ dot.classList.add('active'); dot.textContent = i; lbl.classList.add('active'); }
+      else             { dot.textContent = i; }
+      if (i < 4) {
+        document.getElementById('line' + i).classList.toggle('done', i < n);
+      }
+    }
+  }
+
+  // ── Submit booking → POST /api/bookings ──
+  async function submitBooking() {
+    const fullName        = document.getElementById('fullName').value.trim();
+    const email           = document.getElementById('email').value.trim();
+    const phone           = document.getElementById('phone').value.trim();
+    const pickupAddress   = document.getElementById('pickupAddress').value.trim();
+    const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+    const movingDate      = document.getElementById('movingDate').value;
+    const additionalNotes = document.getElementById('additionalNotes').value.trim();
+
+    if (!fullName) { showToast('⚠️ Please enter your full name.', 'warning'); return; }
+    if (!email)    { showToast('⚠️ Please enter your email.', 'warning'); return; }
+    if (!phone)    { showToast('⚠️ Please enter your phone number.', 'warning'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Confirming...';
+
+    const payload = {
+      fullName,
+      email,
+      phone,
+      pickupAddress,
+      deliveryAddress,
+      movingDate,
+      serviceType: selectedService,
+      branch: selectedBranch,
+      additionalNotes
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        savedBookingId = data.id;
+        savedEmail = email;
+        document.getElementById('bookingId').textContent = '#' + data.id;
+        document.getElementById('confirmedBranch').textContent = selectedBranch;
+        document.getElementById('confirmedEmail').textContent = email;
+        goToStep(4);
+      } else {
+        const err = await res.json();
+        const msg = err.errors ? Object.values(err.errors).join(', ') : 'Booking failed. Please try again.';
+        showToast('❌ ' + msg, 'danger');
+      }
+    } catch (e) {
+      showToast('❌ Could not reach server. Make sure the backend is running.', 'danger');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Confirm Booking';
+    }
+  }
+
+  // ── Track booking after success ──
+  async function trackThisBooking() {
+    const card = document.getElementById('trackCard');
+    const results = document.getElementById('trackResults');
+    card.classList.remove('d-none');
+    results.innerHTML = '<div class="text-center py-3"><span class="spinner-border text-primary"></span></div>';
+    card.scrollIntoView({ behavior: 'smooth' });
+
+    try {
+      const res = await fetch(`${API_BASE}/bookings/email/${encodeURIComponent(savedEmail)}`);
+      if (res.ok) {
+        const bookings = await res.json();
+        const statusBadge = {
+          PENDING: 'warning', CONFIRMED: 'info', IN_PROGRESS: 'primary',
+          COMPLETED: 'success', CANCELLED: 'danger'
+        };
+        let html = '<div class="list-group">';
+        bookings.forEach(b => {
+          const badge = statusBadge[b.status] || 'secondary';
+          const label = { COURIER: 'Courier', HOUSE_SHIFTING: 'House Shifting', RENTAL_TRANSPORT: 'Rental Transport' };
+          html += `
+            <div class="list-group-item ${b.id == savedBookingId ? 'border-primary' : ''}">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong>Booking #${b.id} ${b.id == savedBookingId ? '<span class="badge bg-primary ms-1">Just created</span>' : ''}</strong>
+                <span class="badge bg-${badge}">${b.status}</span>
+              </div>
+              <small class="text-muted">
+                ${label[b.serviceType] || b.serviceType} &bull; ${b.movingDate} &bull; ${b.branch || ''}
+              </small>
+              <div class="mt-1 small">
+                <b>From:</b> ${b.pickupAddress}<br>
+                <b>To:</b> ${b.deliveryAddress}
+              </div>
+            </div>`;
+        });
+        html += '</div>';
+        results.innerHTML = html;
+      }
+    } catch (e) {
+      results.innerHTML = '<div class="alert alert-danger">Could not load bookings.</div>';
+    }
+  }
+</script>
+
+</body>
+</html>

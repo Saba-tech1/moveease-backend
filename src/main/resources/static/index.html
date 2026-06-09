@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoveEase</title>
+  <link rel="icon" type="image/icon" href="./box-seam.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    .flex-container {
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+    .feature-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: .75rem;
+    }
+    /* Toast notification */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+    .spinner-border-sm { vertical-align: middle; }
+  </style>
+</head>
+
+<body>
+
+<!-- ── Toast Notification ───────────────────────────────── -->
+<div id="toast-container"></div>
+
+<!-- ── Navbar ───────────────────────────────── -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img src="./box-seam.svg" alt="boximg" width="30px"> MoveEase</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about-section">About</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Services
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="openQuoteModal('COURIER')">Courier Service</a></li>
+            <li><a class="dropdown-item" href="#" onclick="openQuoteModal('HOUSE_SHIFTING')">House Shifting</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="openQuoteModal('RENTAL_TRANSPORT')">Rental Transports</a></li>
+          </ul>
+        </li>
+        <!-- Track My Booking -->
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#trackModal">Track Booking</a>
+        </li>
+      </ul>
+      <!-- Postcode Check -->
+      <form class="d-flex" role="search" onsubmit="checkPostcode(event)">
+        <input class="form-control me-2" type="search" id="postcodeInput" placeholder="Postcode" aria-label="Search" />
+        <button class="btn btn-outline-success" type="submit">Check</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────── -->
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+  <h1 class="display-4 fw-bold text-body-emphasis">Move With Saba</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead mb-4">Welcome to our website, where we are on a mission to provide exceptional moving services to
+      customers in the US. As a startup, we believe that moving doesn't have to be stressful or complicated, and we
+      are passionate about making the process as seamless and enjoyable as possible.</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+      <!-- Opens Get a Quote modal -->
+      <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3"
+        data-bs-toggle="modal" data-bs-target="#quoteModal">Get a Quote</button>
+      <a href="./Booking.html">
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Click & Book</button>
+      </a>
+    </div>
+  </div>
+  <div class="overflow-hidden" style="max-height: 30vh;">
+    <div class="container px-5">
+      <img src="./moving-van.jpg" class="img-fluid border rounded-3 shadow-lg mb-4"
+        alt="Example image" width="700" height="500" loading="lazy">
+    </div>
+  </div>
+</div>
+
+<!-- ── Features ───────────────────────────────── -->
+<div class="container px-4 py-5" id="about-section">
+  <h2 class="pb-2 border-bottom">Why Move With Us?</h2>
+  <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+        <img src="./briefcase.svg" alt="briefcase" height="30">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Professional</h3>
+      <p>Our team of professional movers are trained to prioritize efficiency, organization, and attention to detail.
+        We understand that your possessions are more than just objects - they are a reflection of your life, memories,
+        and experiences. That's why we take extra care to ensure that everything is packed and transported with the
+        utmost care and attention.</p>
+      <a href="#" class="icon-link" onclick="openQuoteModal('HOUSE_SHIFTING'); return false;">
+        Get a Quote <img src="./chevron-right.svg" alt="chevron-right">
+      </a>
+    </div>
+
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+        <img src="./bus-front.svg" alt="bus-front" height="30">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Countrywide</h3>
+      <p>We offer a range of services to suit your individual needs, whether you're moving locally or across the
+        country. Our team can handle everything from packing and loading to unloading and unpacking, so you can focus
+        on settling into your new home. And with our transparent pricing and no hidden fees, you can trust that
+        you're getting a fair and competitive rate for our services.</p>
+      <a href="#" class="icon-link" onclick="openQuoteModal('RENTAL_TRANSPORT'); return false;">
+        Get a Quote <img src="./chevron-right.svg" alt="chevron-right">
+      </a>
+    </div>
+
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+        <img src="./chat-square-heart.svg" alt="chat-square-heart" height="30">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Personal Touch</h3>
+      <p>At our core, we believe that moving should be an exciting and positive experience, not a stressful one.
+        By providing exceptional moving services in the US, we hope to revolutionize the way people think about
+        moving and provide a better, more personalized experience for our customers.
+        Contact us today to learn more about how we can help you with your next move.</p>
+      <a href="#" class="icon-link" onclick="openQuoteModal('COURIER'); return false;">
+        Get a Quote <img src="./chevron-right.svg" alt="chevron-right">
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Carousel ───────────────────────────────── -->
+<div class="container">
+  <div id="carouselExampleIndicators" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active"><img src="./couple.jpg" class="d-block w-100" alt="couple"></div>
+      <div class="carousel-item"><img src="./dog.jpg" class="d-block w-100" alt="dog"></div>
+      <div class="carousel-item"><img src="./family.jpg" class="d-block w-100" alt="family"></div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- ── Contact Section ───────────────────────────────── -->
+  <div class="row py-5 my-3" id="contact-section">
+    <div class="col-lg-6 mx-auto">
+      <h3 class="pb-2 border-bottom text-center mb-4">Contact Us</h3>
+      <form id="contactForm" onsubmit="submitContact(event)">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="contactName" placeholder="Your Name" required>
+        </div>
+        <div class="mb-3">
+          <input type="email" class="form-control" id="contactEmail" placeholder="Email Address" required>
+        </div>
+        <div class="mb-3">
+          <select class="form-select" id="contactType">
+            <option value="GENERAL">General Enquiry</option>
+            <option value="BUSINESS_ENQUIRY">Business Enquiry</option>
+            <option value="CAREERS">Careers</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <input type="text" class="form-control" id="contactSubject" placeholder="Subject" required>
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" id="contactMessage" rows="4" placeholder="Your message..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" id="contactBtn">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Footer ───────────────────────────────── -->
+  <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
+    <div class="col mb-3">
+      <p class="text-body-secondary">All Rights Reserved © 2026</p>
+    </div>
+    <div class="col mb-3"></div>
+    <div class="col mb-3">
+      <h5>Visit Our Branches</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Chennai</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Coimbatore</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Salem</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Trichy</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Bangalore</a></li>
+      </ul>
+    </div>
+    <div class="col mb-3">
+      <h5>Services</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary" onclick="openQuoteModal('COURIER'); return false;">Courier Service</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary" onclick="openQuoteModal('HOUSE_SHIFTING'); return false;">House Shifting</a></li>
+        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary" onclick="openQuoteModal('RENTAL_TRANSPORT'); return false;">Rental Transports</a></li>
+      </ul>
+    </div>
+    <div class="col mb-3">
+      <h5>Contact us</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a href="#contact-section" class="nav-link p-0 text-body-secondary">For Business Enquiries!</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="#contact-section" class="nav-link p-0 text-body-secondary" onclick="document.getElementById('contactType').value='CAREERS'">Careers</a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL: Get a Quote
+══════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="quoteModal" tabindex="-1" aria-labelledby="quoteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="quoteModalLabel">Get a Free Quote</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="quoteForm" onsubmit="submitQuote(event)">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-control" id="quoteName" required placeholder="John Doe">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email *</label>
+              <input type="email" class="form-control" id="quoteEmail" required placeholder="john@example.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone *</label>
+              <input type="tel" class="form-control" id="quotePhone" required placeholder="+1 234 567 8900">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Service Type *</label>
+              <select class="form-select" id="quoteService" required>
+                <option value="">Select a service</option>
+                <option value="COURIER">Courier Service</option>
+                <option value="HOUSE_SHIFTING">House Shifting</option>
+                <option value="RENTAL_TRANSPORT">Rental Transport</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Moving From *</label>
+              <input type="text" class="form-control" id="quoteFrom" required placeholder="City / Address">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Moving To *</label>
+              <input type="text" class="form-control" id="quoteTo" required placeholder="City / Address">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Property Size</label>
+              <select class="form-select" id="quoteProperty">
+                <option value="">Not applicable</option>
+                <option value="1BHK">1 BHK</option>
+                <option value="2BHK">2 BHK</option>
+                <option value="3BHK">3 BHK</option>
+                <option value="VILLA">Villa</option>
+                <option value="OFFICE">Office</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Additional Message</label>
+              <textarea class="form-control" id="quoteMessage" rows="3" placeholder="Tell us more about your move..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="quoteSubmitBtn" onclick="submitQuote(event)">
+          Request Quote
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL: Track My Booking
+══════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="trackModal" tabindex="-1" aria-labelledby="trackModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="trackModalLabel">Track My Booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" id="trackEmail" placeholder="Enter your booking email">
+          <button class="btn btn-primary" onclick="trackBooking()">Search</button>
+        </div>
+        <div id="trackResults"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL: Postcode Service Area Result
+══════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="postcodeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header" id="postcodeModalHeader">
+        <h5 class="modal-title" id="postcodeModalTitle">Postcode Check</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" id="postcodeModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT — API Integration
+══════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIG — change this when you deploy backend
+  // ─────────────────────────────────────────────
+  const API_BASE = '/api';
+  // When deployed: const API_BASE = 'https://your-backend.railway.app/api';
+
+  // ─────────────────────────────────────────────
+  // TOAST helper
+  // ─────────────────────────────────────────────
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const id = 'toast-' + Date.now();
+    const bg = type === 'success' ? 'bg-success' : type === 'danger' ? 'bg-danger' : 'bg-info';
+    container.insertAdjacentHTML('beforeend', `
+      <div id="${id}" class="toast align-items-center text-white ${bg} border-0 show mb-2" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="document.getElementById('${id}').remove()"></button>
+        </div>
+      </div>
+    `);
+    setTimeout(() => { const el = document.getElementById(id); if (el) el.remove(); }, 4000);
+  }
+
+  // ─────────────────────────────────────────────
+  // QUOTE MODAL — pre-select service from link
+  // ─────────────────────────────────────────────
+  function openQuoteModal(serviceType) {
+    const select = document.getElementById('quoteService');
+    if (serviceType && select) select.value = serviceType;
+    new bootstrap.Modal(document.getElementById('quoteModal')).show();
+  }
+
+  // ─────────────────────────────────────────────
+  // SUBMIT QUOTE → POST /api/quotes
+  // ─────────────────────────────────────────────
+  async function submitQuote(event) {
+    event.preventDefault();
+
+    const btn = document.getElementById('quoteSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Sending...';
+
+    const payload = {
+      name:         document.getElementById('quoteName').value.trim(),
+      email:        document.getElementById('quoteEmail').value.trim(),
+      phone:        document.getElementById('quotePhone').value.trim(),
+      serviceType:  document.getElementById('quoteService').value,
+      fromLocation: document.getElementById('quoteFrom').value.trim(),
+      toLocation:   document.getElementById('quoteTo').value.trim(),
+      propertySize: document.getElementById('quoteProperty').value,
+      message:      document.getElementById('quoteMessage').value.trim()
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/quotes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        bootstrap.Modal.getInstance(document.getElementById('quoteModal')).hide();
+        document.getElementById('quoteForm').reset();
+        showToast(`✅ Quote request submitted! We'll contact you at ${payload.email} soon.`, 'success');
+      } else {
+        const err = await res.json();
+        const msg = err.errors ? Object.values(err.errors).join(', ') : 'Something went wrong.';
+        showToast('❌ ' + msg, 'danger');
+      }
+    } catch (e) {
+      showToast('❌ Could not reach server. Please try again later.', 'danger');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Request Quote';
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // SUBMIT CONTACT → POST /api/contact
+  // ─────────────────────────────────────────────
+  async function submitContact(event) {
+    event.preventDefault();
+
+    const btn = document.getElementById('contactBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Sending...';
+
+    const payload = {
+      name:    document.getElementById('contactName').value.trim(),
+      email:   document.getElementById('contactEmail').value.trim(),
+      type:    document.getElementById('contactType').value,
+      subject: document.getElementById('contactSubject').value.trim(),
+      message: document.getElementById('contactMessage').value.trim()
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        document.getElementById('contactForm').reset();
+        showToast('✅ Message sent! We\'ll get back to you soon.', 'success');
+      } else {
+        showToast('❌ Could not send message. Please try again.', 'danger');
+      }
+    } catch (e) {
+      showToast('❌ Could not reach server. Please try again later.', 'danger');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Send Message';
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // TRACK BOOKING → GET /api/bookings/email/{email}
+  // ─────────────────────────────────────────────
+  async function trackBooking() {
+    const email = document.getElementById('trackEmail').value.trim();
+    const resultsDiv = document.getElementById('trackResults');
+
+    if (!email) {
+      resultsDiv.innerHTML = '<div class="alert alert-warning">Please enter your email address.</div>';
+      return;
+    }
+
+    resultsDiv.innerHTML = '<div class="text-center py-3"><span class="spinner-border text-primary"></span></div>';
+
+    try {
+      const res = await fetch(`${API_BASE}/bookings/email/${encodeURIComponent(email)}`);
+
+      if (res.ok) {
+        const bookings = await res.json();
+        if (bookings.length === 0) {
+          resultsDiv.innerHTML = '<div class="alert alert-info">No bookings found for this email.</div>';
+          return;
+        }
+        const statusBadge = {
+          PENDING: 'warning', CONFIRMED: 'info', IN_PROGRESS: 'primary',
+          COMPLETED: 'success', CANCELLED: 'danger'
+        };
+        let html = '<div class="list-group">';
+        bookings.forEach(b => {
+          const badge = statusBadge[b.status] || 'secondary';
+          html += `
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong>Booking #${b.id}</strong>
+                <span class="badge bg-${badge}">${b.status}</span>
+              </div>
+              <small class="text-muted">
+                ${b.serviceType.replace('_', ' ')} &bull;
+                ${b.movingDate} &bull;
+                ${b.branch || 'N/A'}
+              </small>
+              <div class="mt-1 small">
+                <b>From:</b> ${b.pickupAddress}<br>
+                <b>To:</b> ${b.deliveryAddress}
+              </div>
+            </div>`;
+        });
+        html += '</div>';
+        resultsDiv.innerHTML = html;
+      } else {
+        resultsDiv.innerHTML = '<div class="alert alert-danger">Error fetching bookings.</div>';
+      }
+    } catch (e) {
+      resultsDiv.innerHTML = '<div class="alert alert-danger">Could not reach server.</div>';
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // POSTCODE CHECK (demo — extend with real data)
+  // ─────────────────────────────────────────────
+  const SERVICE_AREAS = {
+    // Chennai
+    '600001': 'Chennai', '600002': 'Chennai', '600003': 'Chennai',
+    // Coimbatore
+    '641001': 'Coimbatore', '641002': 'Coimbatore',
+    // Salem
+    '636001': 'Salem', '636002': 'Salem',
+    // Trichy
+    '620001': 'Trichy', '620002': 'Trichy',
+    // Bangalore
+    '560001': 'Bangalore', '560002': 'Bangalore', '560003': 'Bangalore',
+  };
+
+  function checkPostcode(event) {
+    event.preventDefault();
+    const code = document.getElementById('postcodeInput').value.trim();
+    const header = document.getElementById('postcodeModalHeader');
+    const body   = document.getElementById('postcodeModalBody');
+    const title  = document.getElementById('postcodeModalTitle');
+
+    if (!code) return;
+
+    if (SERVICE_AREAS[code]) {
+      header.className = 'modal-header bg-success text-white';
+      title.textContent = '✅ We Serve This Area!';
+      body.innerHTML = `<p class="my-2">Great news! <strong>${code}</strong> is in our <strong>${SERVICE_AREAS[code]}</strong> service zone.</p>
+        <button class="btn btn-success mt-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#quoteModal">
+          Get a Free Quote
+        </button>`;
+    } else {
+      header.className = 'modal-header bg-warning';
+      title.textContent = '🔍 Area Not Found';
+      body.innerHTML = `<p class="my-2">We don't have <strong>${code}</strong> in our current service areas, but we're expanding! Leave us a message and we'll reach out.</p>
+        <a href="#contact-section" class="btn btn-outline-secondary mt-2" data-bs-dismiss="modal">Contact Us</a>`;
+    }
+
+    new bootstrap.Modal(document.getElementById('postcodeModal')).show();
+  }
+</script>
+
+</body>
+</html>
