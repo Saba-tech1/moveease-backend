@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: moveease-backend
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: moveease-db
+          property: connectionString
+      - key: PORT
+        value: 8080
+
+databases:
+  - name: moveease-db
+    plan: free
+    databaseName: moveease
+    user: moveease_user

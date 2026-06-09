@@ -3,16 +3,20 @@ package com.moveease.service;
 import com.moveease.model.Booking;
 import com.moveease.model.Booking.BookingStatus;
 import com.moveease.repository.BookingRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+
+    @Autowired
+    public BookingService(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
 
     // ── Create ──────────────────────────────────
     public Booking createBooking(Booking booking) {

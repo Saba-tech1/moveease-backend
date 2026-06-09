@@ -2,16 +2,20 @@ package com.moveease.service;
 
 import com.moveease.model.ContactMessage;
 import com.moveease.repository.ContactMessageRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ContactMessageService {
 
     private final ContactMessageRepository contactMessageRepository;
+
+    @Autowired
+    public ContactMessageService(ContactMessageRepository contactMessageRepository) {
+        this.contactMessageRepository = contactMessageRepository;
+    }
 
     public ContactMessage saveMessage(ContactMessage message) {
         return contactMessageRepository.save(message);

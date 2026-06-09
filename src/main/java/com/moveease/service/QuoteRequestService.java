@@ -3,16 +3,20 @@ package com.moveease.service;
 import com.moveease.model.QuoteRequest;
 import com.moveease.model.QuoteRequest.QuoteStatus;
 import com.moveease.repository.QuoteRequestRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class QuoteRequestService {
 
     private final QuoteRequestRepository quoteRequestRepository;
+
+    @Autowired
+    public QuoteRequestService(QuoteRequestRepository quoteRequestRepository) {
+        this.quoteRequestRepository = quoteRequestRepository;
+    }
 
     public QuoteRequest submitQuote(QuoteRequest quote) {
         quote.setStatus(QuoteStatus.NEW);

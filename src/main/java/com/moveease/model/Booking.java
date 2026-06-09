@@ -51,12 +51,10 @@ public class Booking {
     @Column(nullable = false)
     private BookingStatus status = BookingStatus.PENDING;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // updatedAt set manually — FreeSQLDatabase old MySQL doesn't support
-    // two TIMESTAMP columns with DEFAULT CURRENT_TIMESTAMP
-    @Column(name = "updated_at")
+    @Column
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -74,40 +72,28 @@ public class Booking {
         PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
     }
 
-    // ── Getters & Setters ──────────────────────────────────
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-
     public String getPickupAddress() { return pickupAddress; }
     public void setPickupAddress(String pickupAddress) { this.pickupAddress = pickupAddress; }
-
     public String getDeliveryAddress() { return deliveryAddress; }
     public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
-
     public LocalDate getMovingDate() { return movingDate; }
     public void setMovingDate(LocalDate movingDate) { this.movingDate = movingDate; }
-
     public String getServiceType() { return serviceType; }
     public void setServiceType(String serviceType) { this.serviceType = serviceType; }
-
     public String getAdditionalNotes() { return additionalNotes; }
     public void setAdditionalNotes(String additionalNotes) { this.additionalNotes = additionalNotes; }
-
     public String getBranch() { return branch; }
     public void setBranch(String branch) { this.branch = branch; }
-
     public BookingStatus getStatus() { return status; }
     public void setStatus(BookingStatus status) { this.status = status; }
-
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
